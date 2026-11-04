@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Honorio &amp; Ana Eloisa · Convite de casamento</title>
+<meta name="description" content="Honorio Ebo Garcia e Ana Eloisa Salvador Cabinda têm a honra de convidar para o seu casamento. 28 de Novembro de 2026, às 19h, na Casa Rosa, em Luanda.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#050806">
+<meta name="color-scheme" content="dark">
+<!-- Endereços completos: o WhatsApp só mostra a imagem assim. Mudar aqui se o site passar para outro domínio. -->
+<meta property="og:url" content="https://esmeraldino-gomes9690.github.io/convite-honorio-e-ana-eloisa/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Honorio &amp; Ana Eloisa · Convite de casamento">
+<meta property="og:description" content="28 de Novembro de 2026, às 19h, na Casa Rosa, em Luanda. Toque para abrir o convite.">
+<meta property="og:image" content="https://esmeraldino-gomes9690.github.io/convite-honorio-e-ana-eloisa/img/partilha.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/icone-48.png" type="image/png">
+<link rel="apple-touch-icon" href="img/icone-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400;1,500&family=Jost:wght@400;500&family=Pinyon+Script&display=swap">
+<link rel="preload" as="image" href="img/selo.webp">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.className = 'js is-locked';</script>
+</head>
+<body>
+
+<svg class="defs" aria-hidden="true" width="0" height="0">
+  <defs>
+    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="0.3">
+      <stop offset="0" stop-color="#3fa37c"/>
+      <stop offset=".3" stop-color="#a8ecca"/>
+      <stop offset=".5" stop-color="#eafff4"/>
+      <stop offset=".72" stop-color="#5fbf95"/>
+      <stop offset="1" stop-color="#3fa37c"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Cenas fixas: cada secção traz a sua, como no site da Empire -->
+<div class="scene" aria-hidden="true">
+  <canvas id="seq" class="scene__item scene__seq" width="540" height="960" data-scene-id="anel"></canvas>
+  <video class="scene__item scene__film" data-scene-id="festa" data-src="video/festa.mp4" poster="img/festa.webp" muted loop playsinline preload="none"></video>
+  <div class="scene__item scene__photo" data-scene-id="praia" data-img="praia"></div>
+  <div class="scene__item scene__photo" data-scene-id="pergola" data-img="pergola"></div>
+  <div class="scene__item scene__photo" data-scene-id="aneis" data-img="aneis-riso"></div>
+  <div class="scene__item scene__photo" data-scene-id="fim" data-img="aneis-beijo"></div>
+  <div class="scene__shade"></div>
+  <div class="scene__grain"></div>
+</div>
+
+<!-- O envelope é o ecrã inteiro -->
+<section class="gate" id="gate" aria-label="Convite por abrir">
+  <div class="env__liner"></div>
+  <div class="env__card" aria-hidden="true">
+    <div class="env__card-frame">
+      <span class="label">Com muito amor</span>
+      <span class="script">Honorio</span>
+      <span class="script script--amp">&amp;</span>
+      <span class="script">Ana Eloisa</span>
+    </div>
+  </div>
+  <div class="env__flap" aria-hidden="true">
+    <div class="env__face env__face--back"></div>
+    <div class="env__face env__face--front">
+      <svg class="env__edge" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,0 50,44 100,0" vector-effect="non-scaling-stroke"/></svg>
+      <p class="label env__kicker">Convite de casamento</p>
+    </div>
+  </div>
+  <div class="env__body">
+    <div class="env__text">
+      <p class="env__for" id="env-for" hidden>Para <b id="env-guest"></b></p>
+      <h1 class="env__names">
+        <span class="script foil">Honorio</span>
+        <span class="script script--amp foil">&amp;</span>
+        <span class="script foil">Ana Eloisa</span>
+      </h1>
+      <p class="label env__date">28 · 11 · 2026</p>
+      <p class="env__hint">Toque no selo para abrir</p>
+    </div>
+  </div>
+  <button class="seal" id="seal" type="button" aria-label="Abrir o convite">
+    <span class="seal__pulse"></span>
+    <img class="seal__half seal__half--l" src="img/selo.webp" alt="" width="280" height="280" draggable="false">
+    <img class="seal__half seal__half--r" src="img/selo.webp" alt="" width="280" height="280" draggable="false">
+  </button>
+</section>
+
+<main id="convite" tabindex="-1">
+
+  <!-- 1. Do anel ao casal, conduzido pelo dedo -->
+  <section class="scrub" id="scrub" data-scene="anel" aria-label="Abertura">
+    <div class="scrub__pin">
+      <p class="beat beat--one" data-in="0" data-out=".26"><span class="script foil">Ela disse sim.</span></p>
+      <p class="beat beat--two" data-in=".34" data-out=".6">Agora queremos celebrar com quem mais amamos.</p>
+      <p class="beat beat--three" data-in=".74" data-out="2">
+        <span class="script foil">Honorio</span>
+        <span class="script script--amp foil">&amp;</span>
+        <span class="script foil">Ana Eloisa</span>
+      </p>
+      <div class="cue" id="cue"><span>Deslize</span><i></i></div>
+    </div>
+  </section>
+
+  <!-- 2. O convite -->
+  <section class="panel invite" aria-label="O convite">
+    <div class="frame">
+      <i class="frame__corner frame__corner--tl" data-sprig="corner"></i>
+      <i class="frame__corner frame__corner--br" data-sprig="corner"></i>
+      <p class="label rv">Convite de casamento</p>
+      <h2 class="invite__names">
+        <span class="rv">Honorio Ebo Garcia</span>
+        <span class="script script--amp foil rv">&amp;</span>
+        <span class="rv">Ana Eloisa Salvador Cabinda</span>
+      </h2>
+      <div class="divider rv" data-sprig="divider"></div>
+      <p class="invite__line rv">têm a honra de convidar</p>
+      <p class="invite__guest script foil rv" id="invite-guest" hidden></p>
+      <p class="invite__line rv">para o seu casamento.</p>
+      <p class="invite__note rv">Está convidado para o nosso casamento.</p>
+    </div>
+  </section>
+
+  <!-- 3. A data: o número aproxima-se até assentar -->
+  <section class="date" id="data" data-scene="festa" aria-label="A data">
+    <div class="date__pin">
+      <p class="label date__kicker" data-date="kicker">O grande dia</p>
+      <p class="date__day foil" data-date="day" aria-label="Dia 28">28</p>
+      <p class="date__month" data-date="month">Novembro <em>de 2026</em></p>
+      <p class="date__time label" data-date="time">Sábado · às 19h</p>
+    </div>
+  </section>
+
+  <section class="panel when" aria-label="Contagem decrescente e calendário">
+    <div class="count rv" id="count" role="timer" aria-label="Tempo até ao casamento">
+      <div><b id="c-d">00</b><span>dias</span></div>
+      <div><b id="c-h">00</b><span>horas</span></div>
+      <div><b id="c-m">00</b><span>min</span></div>
+      <div><b id="c-s">00</b><span>seg</span></div>
+    </div>
+    <div class="cal rv" id="cal" aria-label="Calendário de Novembro de 2026, com o dia 28 assinalado"></div>
+    <a class="btn btn--ghost rv" href="casamento.ics" download="casamento-honorio-ana-eloisa.ics">Guardar na agenda</a>
+  </section>
+
+  <!-- 4. Os dois: cada foto nasce em verde e ganha cor -->
+  <section class="step" data-scene="praia" data-bloom="praia" aria-label="O mesmo riso">
+    <p class="statement"><span class="label">Nós dois</span><span class="script foil">O mesmo riso.</span></p>
+  </section>
+  <section class="step" data-scene="pergola" data-bloom="pergola" aria-label="O mesmo horizonte">
+    <p class="statement"><span class="script foil">O mesmo horizonte.</span></p>
+  </section>
+  <section class="step" data-scene="aneis" data-bloom="aneis" aria-label="O mesmo sim">
+    <p class="statement"><span class="script foil">O mesmo sim.</span></p>
+  </section>
+
+  <!-- 5. Álbum: fotos em papel, para atirar com o dedo -->
+  <section class="panel album" aria-label="Álbum de fotografias">
+    <p class="label rv">Álbum</p>
+    <div class="deck" id="deck" role="group" aria-roledescription="álbum" aria-label="Fotografias do casal">
+      <figure class="print"><img src="img/gala.webp" alt="Honorio e Ana Eloisa de pé, com flores brancas atrás" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/praia-beijo.webp" alt="Os dois numa selfie à beira-mar, ela a mandar um beijo" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/sentados.webp" alt="Sentados lado a lado, ele a olhar para ela" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/aneis-riso.webp" alt="Os dois a rir e a mostrar os anéis" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/pergola.webp" alt="Os dois de perfil, debaixo de uma pérgola de madeira" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/praia.webp" alt="Selfie sorridente junto ao mar" loading="lazy" draggable="false"></figure>
+      <figure class="print"><img src="img/aneis-beijo.webp" alt="Os dois a mostrar os anéis, ela a mandar um beijo" loading="lazy" draggable="false"></figure>
+    </div>
+    <div class="deck__nav">
+      <button type="button" class="round" id="deck-prev" aria-label="Fotografia anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <span class="deck__count" aria-live="polite"><b id="deck-n">1</b> / 7</span>
+      <button type="button" class="round" id="deck-next" aria-label="Fotografia seguinte"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </section>
+
+  <!-- 6. O local -->
+  <section class="panel place" id="local" aria-label="O local">
+    <p class="label rv">O local</p>
+    <h2 class="place__name rv">Casa Rosa</h2>
+    <div class="divider rv" data-sprig="divider"></div>
+    <address class="place__addr">
+      <span class="rv">Bem-fica, Projeto Zona Verde</span>
+      <span class="rv">Área do novo hospital privado de Luanda</span>
+      <span class="rv">Bairro 40, junto ao Colégio Danilo</span>
+    </address>
+    <div class="stack rv">
+      <a class="btn" id="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Casa%20Rosa%2C%20Projeto%20Zona%20Verde%2C%20Benfica%2C%20Luanda" target="_blank" rel="noopener">Abrir no mapa</a>
+      <button class="btn btn--ghost" type="button" id="copy-addr">Copiar a morada</button>
+    </div>
+  </section>
+
+  <!-- 7. A decoração -->
+  <section class="decor" data-scene="festa" aria-label="A decoração">
+    <div class="statement">
+      <div class="decor__discs"><i></i><i></i></div>
+      <span class="label">A decoração</span>
+      <span class="decor__title">Preto <em>e</em> verde</span>
+    </div>
+  </section>
+
+  <!-- 8. Confirmar -->
+  <section class="panel rsvp" id="confirmar" aria-label="Confirmar presença">
+    <p class="label rv">Confirmar presença</p>
+    <h2 class="rsvp__title script foil rv">Contamos consigo</h2>
+    <label class="field rv">
+      <span class="label">O seu nome</span>
+      <input id="rsvp-name" type="text" name="nome" autocomplete="name" autocapitalize="words" enterkeyhint="done" placeholder="Escreva aqui">
+    </label>
+    <p class="field__msg" id="rsvp-msg" role="status"></p>
+    <div class="stack rv">
+      <a class="btn js-wa" href="https://wa.me/244975084317" data-phone="244975084317" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+        Confirmar: 975 084 317
+      </a>
+      <a class="btn js-wa" href="https://wa.me/244946856864" data-phone="244946856864" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+        Confirmar: 946 856 864
+      </a>
+    </div>
+    <p class="rsvp__call rv">Abre o WhatsApp com a mensagem pronta. Prefere ligar? <a href="tel:+244975084317">975 084 317</a> ou <a href="tel:+244946856864">946 856 864</a></p>
+  </section>
+
+  <!-- 9. Até lá -->
+  <section class="end" data-scene="fim" data-bloom="fim" aria-label="Até dia 28">
+    <div class="statement">
+      <img class="end__seal" src="img/selo.webp" alt="" width="84" height="84" loading="lazy">
+      <span class="script foil">Até dia 28</span>
+      <span class="label">Casa Rosa · às 19h</span>
+    </div>
+  </section>
+</main>
+
+<!-- Comandos ao alcance do polegar -->
+<button class="sound" id="sound" type="button" aria-label="Música" aria-pressed="true" hidden>
+  <i></i><i></i><i></i><i></i>
+</button>
+<nav class="dock" id="dock" aria-label="Atalhos">
+  <a href="#local">O local</a>
+  <a href="#confirmar" class="dock__main">Confirmar presença</a>
+</nav>
+<div class="thread" aria-hidden="true"><i id="thread"></i></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Honorio e Ana Eloisa//Convite//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:casamento-honorio-ana-eloisa-20261128@convite
+DTSTAMP:20261104T220000Z
+DTSTART:20261128T180000Z
+DTEND:20261128T230000Z
+SUMMARY:Casamento de Honorio & Ana Eloisa
+LOCATION:Casa Rosa\, Bem-fica\, Projeto Zona Verde\, Bairro 40\, junto ao Colégio Danilo\, Luanda
+DESCRIPTION:Área do novo hospital privado de Luanda. Contactos: +244 975 084 317 / +244 946 856 864
+END:VEVENT
+END:VCALENDAR
