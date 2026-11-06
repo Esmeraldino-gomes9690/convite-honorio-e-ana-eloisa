@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Honorio &amp; Ana Eloisa · Convite de casamento</title>
-<meta name="description" content="Honorio Ebo Garcia e Ana Eloisa Salvador Cabinda têm a honra de convidar para o seu casamento. 28 de Novembro de 2026, às 19h, na Casa Rosa, em Luanda.">
+<title>Honorio &amp; Eloisa Cabinda · Convite de casamento</title>
+<meta name="description" content="Honorio Ebo Garcia e Eloisa Cabinda têm a honra de convidar para o seu casamento. 28 de Novembro de 2026, às 19h, na Casa Rosa, em Luanda.">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#050806">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#fffefb">
+<meta name="color-scheme" content="light">
 <!-- Endereços completos: o WhatsApp só mostra a imagem assim. Mudar aqui se o site passar para outro domínio. -->
 <meta property="og:url" content="https://esmeraldino-gomes9690.github.io/convite-honorio-e-ana-eloisa/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Honorio &amp; Ana Eloisa · Convite de casamento">
+<meta property="og:title" content="Honorio &amp; Eloisa Cabinda · Convite de casamento">
 <meta property="og:description" content="28 de Novembro de 2026, às 19h, na Casa Rosa, em Luanda. Toque para abrir o convite.">
 <meta property="og:image" content="https://esmeraldino-gomes9690.github.io/convite-honorio-e-ana-eloisa/img/partilha.jpg">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 <link rel="apple-touch-icon" href="img/icone-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400;1,500&family=Jost:wght@400;500&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@400;500&family=Pinyon+Script&display=swap">
 <link rel="preload" as="image" href="img/selo.webp">
 <link rel="stylesheet" href="css/style.css">
 <script>document.documentElement.className = 'js is-locked';</script>
@@ -31,55 +31,48 @@
 <svg class="defs" aria-hidden="true" width="0" height="0">
   <defs>
     <linearGradient id="foil" x1="0" y1="0" x2="1" y2="0.3">
-      <stop offset="0" stop-color="#3fa37c"/>
-      <stop offset=".3" stop-color="#a8ecca"/>
-      <stop offset=".5" stop-color="#eafff4"/>
-      <stop offset=".72" stop-color="#5fbf95"/>
-      <stop offset="1" stop-color="#3fa37c"/>
+      <stop offset="0" stop-color="#9a7533"/>
+      <stop offset=".35" stop-color="#cfab62"/>
+      <stop offset=".55" stop-color="#e6cd94"/>
+      <stop offset=".75" stop-color="#b89049"/>
+      <stop offset="1" stop-color="#9a7533"/>
     </linearGradient>
   </defs>
 </svg>
 
 <!-- Cenas fixas: cada secção traz a sua, como no site da Empire -->
-<div class="scene" aria-hidden="true">
-  <canvas id="seq" class="scene__item scene__seq" width="540" height="960" data-scene-id="anel"></canvas>
-  <video class="scene__item scene__film" data-scene-id="festa" data-src="video/festa.mp4" poster="img/festa.webp" muted loop playsinline preload="none"></video>
+<div class="scene" id="scene" aria-hidden="true">
+  <div class="scene__item scene__photo" data-scene-id="retrato" data-img="retrato"></div>
   <div class="scene__item scene__photo" data-scene-id="praia" data-img="praia"></div>
-  <div class="scene__item scene__photo" data-scene-id="pergola" data-img="pergola"></div>
   <div class="scene__item scene__photo" data-scene-id="aneis" data-img="aneis-riso"></div>
-  <div class="scene__item scene__photo" data-scene-id="fim" data-img="aneis-beijo"></div>
+  <div class="scene__item scene__photo" data-scene-id="fim" data-img="rosas"></div>
   <div class="scene__shade"></div>
-  <div class="scene__grain"></div>
 </div>
 
-<!-- O envelope é o ecrã inteiro -->
+<!-- Envelope branco, de ecrã inteiro -->
 <section class="gate" id="gate" aria-label="Convite por abrir">
   <div class="env__liner"></div>
   <div class="env__card" aria-hidden="true">
     <div class="env__card-frame">
       <span class="label">Com muito amor</span>
-      <span class="script">Honorio</span>
-      <span class="script script--amp">&amp;</span>
-      <span class="script">Ana Eloisa</span>
+      <span class="script foil">Honorio</span>
+      <span class="script script--amp foil">&amp;</span>
+      <span class="script foil">Eloisa Cabinda</span>
+    </div>
+  </div>
+  <div class="env__body">
+    <svg class="env__fold" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,0 50,46 100,0" vector-effect="non-scaling-stroke"/></svg>
+    <div class="env__text">
+      <p class="env__for" id="env-for" hidden>Para <b id="env-guest"></b></p>
+      <p class="env__hint script">Toque aqui para abrir</p>
+      <p class="label env__date">28 · 11 · 2026</p>
     </div>
   </div>
   <div class="env__flap" aria-hidden="true">
     <div class="env__face env__face--back"></div>
     <div class="env__face env__face--front">
-      <svg class="env__edge" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,0 50,44 100,0" vector-effect="non-scaling-stroke"/></svg>
-      <p class="label env__kicker">Convite de casamento</p>
-    </div>
-  </div>
-  <div class="env__body">
-    <div class="env__text">
-      <p class="env__for" id="env-for" hidden>Para <b id="env-guest"></b></p>
-      <h1 class="env__names">
-        <span class="script foil">Honorio</span>
-        <span class="script script--amp foil">&amp;</span>
-        <span class="script foil">Ana Eloisa</span>
-      </h1>
-      <p class="label env__date">28 · 11 · 2026</p>
-      <p class="env__hint">Toque no selo para abrir</p>
+      <svg class="env__edge" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,0 50,46 100,0" vector-effect="non-scaling-stroke"/></svg>
+      <p class="label env__kicker">Honorio &amp; Eloisa Cabinda</p>
     </div>
   </div>
   <button class="seal" id="seal" type="button" aria-label="Abrir o convite">
@@ -91,17 +84,21 @@
 
 <main id="convite" tabindex="-1">
 
-  <!-- 1. Do anel ao casal, conduzido pelo dedo -->
-  <section class="scrub" id="scrub" data-scene="anel" aria-label="Abertura">
-    <div class="scrub__pin">
-      <p class="beat beat--one" data-in="0" data-out=".26"><span class="script foil">Ela disse sim.</span></p>
-      <p class="beat beat--two" data-in=".34" data-out=".6">Agora queremos celebrar com quem mais amamos.</p>
-      <p class="beat beat--three" data-in=".74" data-out="2">
+  <!-- 1. Abertura: o vídeo do anel numa moldura de ecrã inteiro, a fundir-se no papel -->
+  <section class="panel opening" id="scrub" aria-label="Abertura">
+    <div class="clip clip--hero">
+      <video data-src="video/anel.mp4" poster="img/anel.webp" muted loop playsinline preload="none" aria-label="Vídeo do anel e do casal"></video>
+      <button class="clip__play" type="button" aria-label="Ver o vídeo" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      <div class="cue" id="cue"><span>Deslize</span><i></i></div>
+    </div>
+    <div class="opening__text">
+      <span class="label rv">Com muito amor</span>
+      <span class="hero__names rv">
         <span class="script foil">Honorio</span>
         <span class="script script--amp foil">&amp;</span>
-        <span class="script foil">Ana Eloisa</span>
-      </p>
-      <div class="cue" id="cue"><span>Deslize</span><i></i></div>
+        <span class="script foil">Eloisa Cabinda</span>
+      </span>
+      <span class="hero__line rv">convidam para o seu casamento</span>
     </div>
   </section>
 
@@ -114,7 +111,7 @@
       <h2 class="invite__names">
         <span class="rv">Honorio Ebo Garcia</span>
         <span class="script script--amp foil rv">&amp;</span>
-        <span class="rv">Ana Eloisa Salvador Cabinda</span>
+        <span class="rv">Eloisa Cabinda</span>
       </h2>
       <div class="divider rv" data-sprig="divider"></div>
       <p class="invite__line rv">têm a honra de convidar</p>
@@ -124,17 +121,12 @@
     </div>
   </section>
 
-  <!-- 3. A data: o número aproxima-se até assentar -->
-  <section class="date" id="data" data-scene="festa" aria-label="A data">
-    <div class="date__pin">
-      <p class="label date__kicker" data-date="kicker">O grande dia</p>
-      <p class="date__day foil" data-date="day" aria-label="Dia 28">28</p>
-      <p class="date__month" data-date="month">Novembro <em>de 2026</em></p>
-      <p class="date__time label" data-date="time">Sábado · às 19h</p>
-    </div>
-  </section>
-
-  <section class="panel when" aria-label="Contagem decrescente e calendário">
+  <!-- 3. A data -->
+  <section class="panel when" id="data" aria-label="A data">
+    <p class="label rv">A realizar-se no dia</p>
+    <p class="day rv" aria-label="28 de Novembro de 2026"><span>28</span><i></i><span>11</span><i></i><span>26</span></p>
+    <p class="when__time rv">Sábado, às 19h</p>
+    <div class="divider rv" data-sprig="divider"></div>
     <div class="count rv" id="count" role="timer" aria-label="Tempo até ao casamento">
       <div><b id="c-d">00</b><span>dias</span></div>
       <div><b id="c-h">00</b><span>horas</span></div>
@@ -142,40 +134,23 @@
       <div><b id="c-s">00</b><span>seg</span></div>
     </div>
     <div class="cal rv" id="cal" aria-label="Calendário de Novembro de 2026, com o dia 28 assinalado"></div>
-    <a class="btn btn--ghost rv" href="casamento.ics" download="casamento-honorio-ana-eloisa.ics">Guardar na agenda</a>
+    <a class="btn rv" href="casamento.ics" download="casamento-honorio-eloisa-cabinda.ics">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
+      Guardar na agenda
+    </a>
   </section>
 
-  <!-- 4. Os dois: cada foto nasce em verde e ganha cor -->
-  <section class="step" data-scene="praia" data-bloom="praia" aria-label="O mesmo riso">
-    <p class="statement"><span class="label">Nós dois</span><span class="script foil">O mesmo riso.</span></p>
-  </section>
-  <section class="step" data-scene="pergola" data-bloom="pergola" aria-label="O mesmo horizonte">
-    <p class="statement"><span class="script foil">O mesmo horizonte.</span></p>
-  </section>
-  <section class="step" data-scene="aneis" data-bloom="aneis" aria-label="O mesmo sim">
-    <p class="statement"><span class="script foil">O mesmo sim.</span></p>
-  </section>
-
-  <!-- 5. Álbum: fotos em papel, para atirar com o dedo -->
-  <section class="panel album" aria-label="Álbum de fotografias">
-    <p class="label rv">Álbum</p>
-    <div class="deck" id="deck" role="group" aria-roledescription="álbum" aria-label="Fotografias do casal">
-      <figure class="print"><img src="img/gala.webp" alt="Honorio e Ana Eloisa de pé, com flores brancas atrás" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/praia-beijo.webp" alt="Os dois numa selfie à beira-mar, ela a mandar um beijo" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/sentados.webp" alt="Sentados lado a lado, ele a olhar para ela" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/aneis-riso.webp" alt="Os dois a rir e a mostrar os anéis" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/pergola.webp" alt="Os dois de perfil, debaixo de uma pérgola de madeira" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/praia.webp" alt="Selfie sorridente junto ao mar" loading="lazy" draggable="false"></figure>
-      <figure class="print"><img src="img/aneis-beijo.webp" alt="Os dois a mostrar os anéis, ela a mandar um beijo" loading="lazy" draggable="false"></figure>
-    </div>
-    <div class="deck__nav">
-      <button type="button" class="round" id="deck-prev" aria-label="Fotografia anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <span class="deck__count" aria-live="polite"><b id="deck-n">1</b> / 7</span>
-      <button type="button" class="round" id="deck-next" aria-label="Fotografia seguinte"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <!-- 4. O vídeo da festa, numa janela em arco -->
+  <section class="panel film" aria-label="O nosso vídeo">
+    <p class="label rv">A nossa história</p>
+    <h2 class="film__title script foil rv">Um pedacinho de nós</h2>
+    <div class="clip clip--arch rv">
+      <video data-src="video/festa.mp4" poster="img/festa.webp" muted loop playsinline preload="none" aria-label="Vídeo da festa"></video>
+      <button class="clip__play" type="button" aria-label="Ver o vídeo" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
     </div>
   </section>
 
-  <!-- 6. O local -->
+  <!-- 5. O local -->
   <section class="panel place" id="local" aria-label="O local">
     <p class="label rv">O local</p>
     <h2 class="place__name rv">Casa Rosa</h2>
@@ -185,22 +160,44 @@
       <span class="rv">Área do novo hospital privado de Luanda</span>
       <span class="rv">Bairro 40, junto ao Colégio Danilo</span>
     </address>
-    <div class="stack rv">
-      <a class="btn" id="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Casa%20Rosa%2C%20Projeto%20Zona%20Verde%2C%20Benfica%2C%20Luanda" target="_blank" rel="noopener">Abrir no mapa</a>
-      <button class="btn btn--ghost" type="button" id="copy-addr">Copiar a morada</button>
+    <button class="btn rv" type="button" id="copy-addr">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+      <span>Copiar a morada</span>
+    </button>
+  </section>
+
+  <!-- 6. Os dois -->
+  <section class="step" data-scene="retrato" aria-label="Nós dois">
+    <p class="statement"><span class="label">Nós dois</span><span class="script foil">O mesmo sonho.</span></p>
+  </section>
+  <section class="step" data-scene="praia" aria-label="O mesmo riso">
+    <p class="statement"><span class="script foil">O mesmo riso.</span></p>
+  </section>
+  <section class="step" data-scene="aneis" aria-label="O mesmo sim">
+    <p class="statement"><span class="script foil">O mesmo sim.</span></p>
+  </section>
+
+  <!-- 7. Álbum em arco: gira com o dedo, abre com um toque -->
+  <section class="panel album" aria-label="Álbum de fotografias">
+    <div class="arc" id="arc">
+      <div class="arc__wheel" id="wheel"></div>
+      <div class="arc__center">
+        <p class="label">Álbum</p>
+        <h2 class="heading">Os nossos <em>momentos</em></h2>
+        <p class="arc__hint">Deslize para girar. Toque numa foto para a ver.</p>
+        <button class="btn btn--small" type="button" id="arc-open">Ver as fotos</button>
+      </div>
     </div>
   </section>
 
-  <!-- 7. A decoração -->
-  <section class="decor" data-scene="festa" aria-label="A decoração">
-    <div class="statement">
-      <div class="decor__discs"><i></i><i></i></div>
-      <span class="label">A decoração</span>
-      <span class="decor__title">Preto <em>e</em> verde</span>
-    </div>
+  <!-- 8. A decoração -->
+  <section class="panel decor" aria-label="A decoração">
+    <div class="decor__discs rv"><i></i><i></i></div>
+    <p class="label rv">A decoração</p>
+    <p class="decor__title rv">Preto <em>&amp;</em> verde</p>
   </section>
 
-  <!-- 8. Confirmar -->
+  <!-- 9. Confirmar -->
   <section class="panel rsvp" id="confirmar" aria-label="Confirmar presença">
     <p class="label rv">Confirmar presença</p>
     <h2 class="rsvp__title script foil rv">Contamos consigo</h2>
@@ -210,7 +207,7 @@
     </label>
     <p class="field__msg" id="rsvp-msg" role="status"></p>
     <div class="stack rv">
-      <a class="btn js-wa" href="https://wa.me/244975084317" data-phone="244975084317" target="_blank" rel="noopener">
+      <a class="btn btn--solid js-wa" href="https://wa.me/244975084317" data-phone="244975084317" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
         Confirmar: 975 084 317
       </a>
@@ -222,15 +219,26 @@
     <p class="rsvp__call rv">Abre o WhatsApp com a mensagem pronta. Prefere ligar? <a href="tel:+244975084317">975 084 317</a> ou <a href="tel:+244946856864">946 856 864</a></p>
   </section>
 
-  <!-- 9. Até lá -->
-  <section class="end" data-scene="fim" data-bloom="fim" aria-label="Até dia 28">
+  <!-- 10. Com carinho -->
+  <section class="end" data-scene="fim" aria-label="Com carinho">
     <div class="statement">
-      <img class="end__seal" src="img/selo.webp" alt="" width="84" height="84" loading="lazy">
-      <span class="script foil">Até dia 28</span>
-      <span class="label">Casa Rosa · às 19h</span>
+      <span class="label">Com carinho</span>
+      <span class="script foil">Honorio &amp;<br>Eloisa Cabinda</span>
+      <span class="end__date">28 · 11 · 2026 · Casa Rosa</span>
     </div>
   </section>
 </main>
+
+<!-- Foto ampliada -->
+<dialog class="lightbox" id="lightbox" aria-label="Fotografia ampliada">
+  <img id="lb-img" alt="">
+  <div class="lightbox__bar">
+    <button type="button" class="round" id="lb-prev" aria-label="Fotografia anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="lightbox__count" aria-live="polite"><b id="lb-n">1</b> / 8</span>
+    <button type="button" class="round" id="lb-next" aria-label="Fotografia seguinte"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <button type="button" class="round lightbox__close" id="lb-close" aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</dialog>
 
 <!-- Comandos ao alcance do polegar -->
 <button class="sound" id="sound" type="button" aria-label="Música" aria-pressed="true" hidden>

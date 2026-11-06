@@ -1,4 +1,4 @@
-/* Convite de Honorio & Ana Eloisa. Sem dependências. */
+/* Convite de Honorio & Eloisa Cabinda. Sem dependências. */
 (function () {
   'use strict';
 
@@ -107,67 +107,7 @@
     if (!p || p.loaded) return;
     p.loaded = true;
     p.color.src = 'img/' + p.name + '.webp';
-    p.mono.src = 'img/' + p.name + '-m.webp';
   }
-
-  /* Sequência de fotogramas: do anel ao casal ---------------------------- */
-
-  var FRAMES = 56;
-  var canvas = $('#seq');
-  var ctx = canvas.getContext('2d');
-  var frames = new Array(FRAMES);
-  var shown = -1, wanted = 0, current = 0;
-
-  function frameUrl(i) { return 'seq/' + ('00' + i).slice(-3) + '.webp'; }
-  function nearest(i) {
-    if (frames[i] && frames[i].ready) return frames[i];
-    for (var d = 1; d < FRAMES; d++) {
-      if (frames[i - d] && frames[i - d].ready) return frames[i - d];
-      if (frames[i + d] && frames[i + d].ready) return frames[i + d];
-    }
-    return null;
-  }
-  function draw(pos) {
-    var a = Math.floor(pos), t = pos - a;
-    var first = nearest(a);
-    if (!first) return;
-    ctx.globalAlpha = 1;
-    ctx.drawImage(first, 0, 0, canvas.width, canvas.height);
-    // Mistura com o fotograma seguinte: o movimento fica contínuo entre fotogramas
-    if (t > 0.04 && a + 1 < FRAMES && frames[a + 1] && frames[a + 1].ready) {
-      ctx.globalAlpha = t;
-      ctx.drawImage(frames[a + 1], 0, 0, canvas.width, canvas.height);
-      ctx.globalAlpha = 1;
-    }
-    shown = pos;
-  }
-  (function preload() {
-    // Primeiro uma passagem grossa, depois vai preenchendo: desliza logo, e fica cada vez mais fluido
-    var order = [], seen = {}, steps = (saveData || reduced) ? [FRAMES] : [8, 4, 2, 1];
-    steps.forEach(function (s) {
-      for (var i = 0; i < FRAMES; i += s) if (!seen[i]) { seen[i] = 1; order.push(i); }
-    });
-    if (!seen[FRAMES - 1]) order.push(FRAMES - 1);
-    if (reduced) order = [FRAMES - 1];
-    var next = 0, active = 0;
-    function pump() {
-      while (active < 6 && next < order.length) start(order[next++]);
-    }
-    function start(i) {
-      active++;
-      var img = new Image();
-      img.onload = function () {
-        img.ready = true;
-        frames[i] = img;
-        active--;
-        if (shown < 0 || Math.abs(i - current) < 1.5) draw(current);
-        pump();
-      };
-      img.onerror = function () { active--; pump(); };
-      img.src = frameUrl(i);
-    }
-    pump();
-  })();
 
   /* Cena ativa ----------------------------------------------------------- */
 
@@ -178,6 +118,7 @@
     return { el: el, id: el.getAttribute('data-scene'), line: prev && prev.classList.contains('panel') ? 1 : 0.55, top: 0 };
   });
   var currentScene = null;
+  var videos = $$('video.scene__item');
   var film = $('.scene__film');
 
   function setScene(id) {
@@ -189,14 +130,17 @@
     loadPhoto(id);
     syncFilm();
   }
+  // Como na Empire: o vídeo da cena ativa toca em ciclo; os outros ficam em pausa
   function syncFilm() {
-    if (currentScene === 'festa' && !reduced && !saveData) {
-      if (!film.getAttribute('src')) film.src = film.getAttribute('data-src');
-      var playing = film.play();
-      if (playing && playing.catch) playing.catch(function () {});
-    } else {
-      film.pause();
-    }
+    videos.forEach(function (video) {
+      if (video.classList.contains('is-active') && !doc.hidden && !reduced && !saveData) {
+        if (!video.getAttribute('src')) video.src = video.getAttribute('data-src');
+        var playing = video.play();
+        if (playing && playing.catch) playing.catch(function () {});
+      } else {
+        video.pause();
+      }
+    });
   }
 
   /* Medidas -------------------------------------------------------------- */
@@ -214,7 +158,7 @@
   var statements = $$('.statement').map(function (el) { return { el: el, top: 0, h: 0 }; });
   var blooms = $$('[data-bloom]').map(function (el) { return { el: el, id: el.getAttribute('data-bloom'), top: 0, h: 0 }; });
   var dock = $('#dock');
-  var dockPanels = $$('.invite, .when, .album, .place').map(function (el) { return { el: el, top: 0, bottom: 0 }; });
+  var dockPanels = $$('.panel:not(.album):not(.opening)').map(function (el) { return { el: el, top: 0, bottom: 0 }; });
   var thread = $('#thread');
   var rsvp = $('#confirmar');
   var m = { scrubTop: 0, scrubLen: 1, dateTop: 0, dateLen: 1, rsvpTop: 0, rsvpBottom: 0, max: 1 };
@@ -251,15 +195,8 @@
     }
     setScene(id);
 
-    // Fotogramas, com um pequeno atraso que apaga os saltos do dedo
     var p = ramp(y, m.scrubTop, m.scrubTop + m.scrubLen);
     if (!reduced) {
-      // Inteiro: em repouso mostra um fotograma limpo, sem imagem dupla
-      wanted = Math.round(ramp(p, 0, 0.84) * (FRAMES - 1));
-      current += (wanted - current) * 0.2;
-      if (Math.abs(wanted - current) < 0.01) current = wanted;
-      if (current !== shown && currentScene === 'anel') draw(current);
-
       beats.forEach(function (b) {
         var fadeIn = b.a === 0 ? 1 : ramp(p, b.a, b.a + 0.07);
         var fadeOut = 1 - ramp(p, b.b - 0.07, b.b);
@@ -267,17 +204,6 @@
         b.el.style.opacity = o.toFixed(3);
         var shift = (1 - fadeIn) * 18 - (1 - fadeOut) * 18;
         b.el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
-      });
-
-      // A data: o número vem de muito perto até assentar
-      var dp = ramp(y, m.dateTop - vh * 0.1, m.dateTop + m.dateLen * 0.92);
-      var z = easeOut(ramp(dp, 0.02, 0.62));
-      datePieces.day.style.transform = 'translate3d(0,0,0) scale(' + (3.6 - 2.6 * z).toFixed(3) + ')';
-      datePieces.day.style.opacity = ramp(dp, 0, 0.26).toFixed(3);
-      [[datePieces.kicker, 0.5], [datePieces.month, 0.58], [datePieces.time, 0.68]].forEach(function (pair) {
-        var t = ramp(dp, pair[1], pair[1] + 0.16);
-        pair[0].style.opacity = t.toFixed(3);
-        pair[0].style.transform = 'translate3d(0,' + ((1 - t) * 14).toFixed(1) + 'px,0)';
       });
 
       // Texto das cenas: acende ao passar pelo centro, como na Empire
@@ -304,6 +230,7 @@
     }
 
     if (moved) {
+      if (window.__arcScroll) window.__arcScroll(y);
       if (!saveData && !reduced && !film.getAttribute('src') && y > m.dateTop - vh * 1.5) {
         film.preload = 'auto';
         film.src = film.getAttribute('data-src');
@@ -316,8 +243,7 @@
       thread.style.transform = 'scaleY(' + (y / m.max).toFixed(4) + ')';
     }
 
-    var settling = !reduced && Math.abs(wanted - current) > 0.01;
-    if (settling || y !== window.pageYOffset) {
+    if (y !== window.pageYOffset) {
       requestAnimationFrame(paint);
     } else {
       running = false;
@@ -421,7 +347,7 @@
   soundBtn.addEventListener('click', function () { setSound(!audio.wantOn); });
   doc.addEventListener('visibilitychange', function () {
     if (!audio.ctx) return;
-    if (doc.hidden) { audio.ctx.suspend(); film.pause(); }
+    if (doc.hidden) { audio.ctx.suspend(); syncFilm(); }
     else { if (audio.wantOn) audio.ctx.resume(); syncFilm(); }
   });
 
@@ -481,104 +407,144 @@
     tick();
   })();
 
-  /* Álbum: atirar a foto com o dedo --------------------------------------- */
+  /* Álbum em arco: gira com o dedo, abre com um toque --------------------- */
 
   (function () {
-    var deck = $('#deck');
-    var prints = $$('.print', deck);
-    var count = $('#deck-n');
-    var index = 0, flying = false;
-    var TILT = [-2.4, 1.8, -1.1, 2.6, -1.9, 1.2, -2.8];
+    var PHOTOS = [
+      ['retrato', 'Honorio e Eloisa Cabinda de pé, ela com a mão no peito dele'],
+      ['rosas', 'Os dois diante de rosas brancas e colunas douradas'],
+      ['praia', 'Selfie sorridente junto ao mar'],
+      ['sentados', 'Sentados lado a lado, ele a olhar para ela'],
+      ['aneis-riso', 'Os dois a rir e a mostrar os anéis'],
+      ['pergola', 'Os dois de perfil, debaixo de uma pérgola de madeira'],
+      ['praia-beijo', 'Os dois numa selfie à beira-mar, ela a mandar um beijo'],
+      ['aneis-beijo', 'Os dois a mostrar os anéis, ela a mandar um beijo']
+    ];
+    var arc = $('#arc');
+    var wheel = $('#wheel');
+    var CELLS = PHOTOS.length * 2;
+    var STEP = 360 / CELLS;
+    var dragRot = 0, scrollRot = 0, velocity = 0, spinning = false, dragged = false;
 
-    function layout() {
-      prints.forEach(function (card, i) {
-        var depth = (i - index + prints.length) % prints.length;
-        card.style.zIndex = prints.length - depth;
-        card.style.opacity = depth > 2 ? 0 : 1;
-        card.style.visibility = depth > 2 ? 'hidden' : 'visible';
-        card.setAttribute('aria-hidden', depth === 0 ? 'false' : 'true');
-        card.style.transform = 'translate3d(0,' + depth * 11 + 'px,0) scale(' + (1 - depth * 0.045) + ') rotate(' + (depth === 0 ? 0 : TILT[i]) + 'deg)';
-      });
-      count.textContent = index + 1;
+    // Duas voltas das mesmas fotos: o círculo fica cheio
+    var html = '';
+    for (var i = 0; i < CELLS; i++) {
+      var p = PHOTOS[i % PHOTOS.length];
+      html += '<button type="button" class="arc__cell" data-i="' + (i % PHOTOS.length) + '" style="--a:' + (i * STEP) + 'deg"' +
+        (i >= PHOTOS.length ? ' tabindex="-1" aria-hidden="true"' : ' aria-label="Ampliar: ' + p[1] + '"') +
+        '><img src="img/' + p[0] + '-p.webp" alt="" loading="lazy" decoding="async" draggable="false"></button>';
     }
-    function fling(dir) {
-      if (flying) return;
-      flying = true;
-      buzz(8);
-      var card = prints[index];
-      card.classList.remove('is-drag');
-      card.style.transform = 'translate3d(' + dir * 130 + '%,-3%,0) rotate(' + dir * 16 + 'deg)';
-      card.style.opacity = 0;
-      index = (index + 1) % prints.length;
-      window.setTimeout(function () {
-        // A foto atirada volta, sem se ver, para o fundo do monte
-        card.style.transition = 'none';
-        layout();
-        void card.offsetWidth;
-        card.style.transition = '';
-        flying = false;
-      }, 300);
-      // As de baixo sobem já, sem esperar
-      prints.forEach(function (c, i) {
-        if (c === card) return;
-        var depth = (i - index + prints.length) % prints.length;
-        c.style.zIndex = prints.length - depth;
-        c.style.opacity = depth > 2 ? 0 : 1;
-        c.style.visibility = depth > 2 ? 'hidden' : 'visible';
-        c.style.transform = 'translate3d(0,' + depth * 11 + 'px,0) scale(' + (1 - depth * 0.045) + ') rotate(' + (depth === 0 ? 0 : TILT[i]) + 'deg)';
-      });
-      count.textContent = index + 1;
-    }
-    function back() {
-      if (flying) return;
-      index = (index - 1 + prints.length) % prints.length;
-      var card = prints[index];
-      card.style.transition = 'none';
-      card.style.transform = 'translate3d(-130%,-3%,0) rotate(-16deg)';
-      card.style.opacity = 0;
-      card.style.zIndex = prints.length + 1;
-      card.style.visibility = 'visible';
-      void card.offsetWidth;
-      card.style.transition = '';
-      layout();
+    wheel.innerHTML = html;
+
+    function paintWheel() { wheel.style.transform = 'rotate(' + (dragRot + scrollRot).toFixed(2) + 'deg)'; }
+    paintWheel();
+
+    var arcTop = 0;
+    function measureArc() { arcTop = pageTop(arc); }
+    window.addEventListener('resize', measureArc);
+    window.addEventListener('load', measureArc);
+    seal.addEventListener('click', function () { setTimeout(measureArc, 2500); });
+    window.__arcScroll = function (y) {
+      if (reduced) return;
+      if (!arcTop) measureArc();
+      if (y + vh < arcTop - vh || y > arcTop + vh * 1.5) return;
+      scrollRot = (y - arcTop) * 0.05;
+      paintWheel();
+    };
+
+    function spin() {
+      velocity *= 0.95;
+      dragRot += velocity;
+      paintWheel();
+      if (Math.abs(velocity) > 0.02) requestAnimationFrame(spin);
+      else spinning = false;
     }
 
     var drag = null;
-    deck.addEventListener('pointerdown', function (e) {
-      if (flying || (e.pointerType === 'mouse' && e.button !== 0)) return;
-      var card = prints[index];
-      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, t: e.timeStamp, lastX: e.clientX, lastT: e.timeStamp, v: 0, card: card, live: false };
+    arc.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (e.target.closest && e.target.closest('#arc-open')) return;
+      velocity = 0;
+      dragged = false;
+      drag = { id: e.pointerId, x: e.clientX, last: e.clientX, t: e.timeStamp, v: 0, live: false };
     });
-    deck.addEventListener('pointermove', function (e) {
+    arc.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.id) return;
-      var dx = e.clientX - drag.x;
       if (!drag.live) {
-        if (Math.abs(dx) < 6) return;
+        if (Math.abs(e.clientX - drag.x) < 8) return;
         drag.live = true;
-        drag.card.classList.add('is-drag');
-        try { deck.setPointerCapture(e.pointerId); } catch (err) {}
+        dragged = true;
+        arc.classList.add('is-drag');
+        try { arc.setPointerCapture(e.pointerId); } catch (err) {}
       }
-      var dt = e.timeStamp - drag.lastT;
-      if (dt > 0) drag.v = (e.clientX - drag.lastX) / dt;
-      drag.lastX = e.clientX; drag.lastT = e.timeStamp; drag.dx = dx;
-      drag.card.style.transform = 'translate3d(' + dx + 'px,' + Math.abs(dx) * -0.03 + 'px,0) rotate(' + dx * 0.05 + 'deg)';
+      // Um dedo a percorrer o ecrã faz cerca de um terço de volta
+      var d = (e.clientX - drag.last) * (360 / (Math.PI * 2 * arc.offsetWidth * 0.585));
+      var dt = e.timeStamp - drag.t;
+      if (dt > 0) drag.v = d / dt * 16;
+      drag.last = e.clientX;
+      drag.t = e.timeStamp;
+      dragRot += d;
+      paintWheel();
     });
-    function end(e) {
+    function endDrag(e) {
       if (!drag || e.pointerId !== drag.id) return;
-      var d = drag;
+      var was = drag;
       drag = null;
-      if (!d.live) return;
-      d.card.classList.remove('is-drag');
-      // Conta a distância e a velocidade: um gesto curto e rápido também atira
-      if (e.type !== 'pointercancel' && (Math.abs(d.dx) > 80 || Math.abs(d.v) > 0.5)) fling(d.dx < 0 ? -1 : 1);
-      else layout();
+      arc.classList.remove('is-drag');
+      if (was.live && !reduced && e.type !== 'pointercancel') {
+        velocity = clamp(was.v, -6, 6);
+        if (!spinning) { spinning = true; requestAnimationFrame(spin); }
+      }
     }
-    deck.addEventListener('pointerup', end);
-    deck.addEventListener('pointercancel', end);
+    arc.addEventListener('pointerup', endDrag);
+    arc.addEventListener('pointercancel', endDrag);
 
-    $('#deck-next').addEventListener('click', function () { fling(-1); });
-    $('#deck-prev').addEventListener('click', back);
-    layout();
+    /* Vista ampliada */
+    var box = $('#lightbox');
+    var boxImg = $('#lb-img');
+    var boxN = $('#lb-n');
+    var current = 0;
+    function show(i) {
+      current = (i + PHOTOS.length) % PHOTOS.length;
+      boxImg.src = 'img/' + PHOTOS[current][0] + '.webp';
+      boxImg.alt = PHOTOS[current][1];
+      boxN.textContent = current + 1;
+      // A seguinte já a carregar: a passagem fica imediata
+      new Image().src = 'img/' + PHOTOS[(current + 1) % PHOTOS.length][0] + '.webp';
+    }
+    function open(i) {
+      show(i);
+      if (box.showModal) box.showModal(); else box.setAttribute('open', '');
+      requestAnimationFrame(function () { box.classList.add('is-on'); });
+    }
+    function close() {
+      box.classList.remove('is-on');
+      window.setTimeout(function () { if (box.close) box.close(); else box.removeAttribute('open'); }, 220);
+    }
+    wheel.addEventListener('click', function (e) {
+      var cell = e.target.closest('.arc__cell');
+      if (!cell || dragged) return;
+      open(parseInt(cell.getAttribute('data-i'), 10));
+    });
+    $('#arc-open').addEventListener('click', function () { open(0); });
+    $('#lb-close').addEventListener('click', close);
+    $('#lb-next').addEventListener('click', function () { show(current + 1); });
+    $('#lb-prev').addEventListener('click', function () { show(current - 1); });
+    box.addEventListener('cancel', function (e) { e.preventDefault(); close(); });
+    doc.addEventListener('keydown', function (e) {
+      if (!box.open) return;
+      if (e.key === 'ArrowRight') show(current + 1);
+      if (e.key === 'ArrowLeft') show(current - 1);
+    });
+    // Deslizar na foto ampliada passa à seguinte
+    var startX = null;
+    box.addEventListener('pointerdown', function (e) { startX = e.clientX; });
+    box.addEventListener('pointerup', function (e) {
+      if (startX === null) return;
+      var dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 50) { buzz(8); show(current + (dx < 0 ? 1 : -1)); }
+    });
   })();
 
   /* Morada e WhatsApp ----------------------------------------------------- */
@@ -622,7 +588,7 @@
           nameInput.focus();
           return;
         }
-        var text = 'Olá! Sou ' + name + ' e confirmo a minha presença no casamento do Honorio e da Ana Eloisa, no dia 28 de Novembro, às 19h, na Casa Rosa.';
+        var text = 'Olá! Sou ' + name + ' e confirmo a minha presença no casamento do Honorio e da Eloisa Cabinda, no dia 28 de Novembro, às 19h, na Casa Rosa.';
         link.href = 'https://wa.me/' + link.getAttribute('data-phone') + '?text=' + encodeURIComponent(text);
       });
     });
@@ -637,6 +603,56 @@
       window.scrollTo({ top: pageTop(target) - 10, behavior: reduced ? 'auto' : 'smooth' });
     });
   });
+
+  /* Vídeos em molduras: tocam sozinhos quando aparecem e param quando saem.
+     Se o telemóvel não deixar tocar sozinho (poupança de bateria), aparece o botão. */
+  (function () {
+    var clips = $$('.clip').map(function (box) {
+      return { box: box, video: $('video', box), button: $('.clip__play', box), visible: false, blocked: false };
+    });
+    function load(c) {
+      if (c.video.getAttribute('src')) return;
+      c.video.src = c.video.getAttribute('data-src');
+      c.video.load();
+    }
+    function play(c) {
+      load(c);
+      var playing = c.video.play();
+      if (playing && playing.then) {
+        playing.then(function () { c.blocked = false; c.button.hidden = true; })
+          .catch(function () { c.blocked = true; c.button.hidden = false; });
+      }
+    }
+    function sync() {
+      clips.forEach(function (c) {
+        if (c.visible && !doc.hidden && !saveData && !reduced) play(c);
+        else c.video.pause();
+      });
+    }
+    clips.forEach(function (c) {
+      c.button.addEventListener('click', function () { c.visible = true; load(c); c.video.play().then(function () { c.button.hidden = true; }).catch(function () {}); });
+      c.video.addEventListener('playing', function () { c.button.hidden = true; });
+      c.video.addEventListener('error', function () { c.button.hidden = false; });
+      // Com poupança de dados ou movimento reduzido, o vídeo só toca se a pessoa pedir
+      if (saveData || reduced) c.button.hidden = false;
+    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var c = clips.filter(function (x) { return x.box === entry.target; })[0];
+          c.visible = entry.isIntersecting;
+          // Carrega um pouco antes de aparecer, para não começar em branco
+          if (entry.isIntersecting || entry.intersectionRatio > 0) load(c);
+        });
+        sync();
+      }, { rootMargin: '25% 0px 25% 0px', threshold: [0, 0.2] });
+      clips.forEach(function (c) { io.observe(c.box); });
+    } else {
+      clips.forEach(function (c) { c.visible = true; });
+      sync();
+    }
+    doc.addEventListener('visibilitychange', sync);
+  })();
 
   // Fotos iniciais das cenas e primeira medição
   Object.keys(photos).forEach(function (id) {
