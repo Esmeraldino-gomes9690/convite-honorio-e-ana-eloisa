@@ -1,0 +1,11 @@
+.git
+.DS_Store
+.nojekyll
+seq
+audio
+*.sb-*
+video/teste.mp4
+.env.local
+.env*.local
+.gitignore
+.vercelignore

@@ -11,3 +11,5 @@ seq/062.webp
 seq/063.webp
 video/teste.mp4
 seq/
+.vercel
+.env*
