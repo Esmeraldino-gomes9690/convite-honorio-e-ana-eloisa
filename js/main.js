@@ -119,7 +119,6 @@
   });
   var currentScene = null;
   var videos = $$('video.scene__item');
-  var film = $('.scene__film');
 
   function setScene(id) {
     if (id === currentScene) return;
@@ -231,10 +230,6 @@
 
     if (moved) {
       if (window.__arcScroll) window.__arcScroll(y);
-      if (!saveData && !reduced && !film.getAttribute('src') && y > m.dateTop - vh * 1.5) {
-        film.preload = 'auto';
-        film.src = film.getAttribute('data-src');
-      }
       cue.classList.toggle('is-gone', y > 30);
       var mid = y + vh * 0.6;
       var onPanel = dockPanels.some(function (d) { return mid > d.top && mid < d.bottom; });
@@ -279,76 +274,96 @@
     revealables.forEach(function (el) { el.classList.add('is-in', 'is-drawn'); });
   }
 
-  /* Música --------------------------------------------------------------- */
+  /* Música: leitor oficial do YouTube. Não se vê: só se ouve. Começa com o toque no selo;
+     se o telemóvel não deixar, aparece um aviso para tocar e ouvir. */
 
-  var audio = { ctx: null, gain: null, buffer: null, wantOn: true, playing: false, src: null, data: null };
+  var MUSIC_ID = 'vA83MufOCoA';
+  var MUSIC_START = 0; // segundo do vídeo em que a música começa
+  var music = { player: null, ready: false, wantOn: false, playing: false, failed: false };
   var soundBtn = $('#sound');
-  var LEVEL = 0.5, FADE = 1.6;
+  var soundHint = $('#sound-hint');
 
-  if (window.fetch && (window.AudioContext || window.webkitAudioContext)) {
-    audio.data = fetch('audio/musica.m4a').then(function (r) {
-      if (!r.ok) throw new Error('musica');
-      return r.arrayBuffer();
-    }).catch(function () { return null; });
+  function showSoundState() {
+    soundBtn.setAttribute('aria-pressed', music.playing ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', music.playing ? 'Parar a música' : 'Tocar a música');
+    if (music.playing) soundHint.hidden = true;
   }
-  function playLoop() {
-    if (!audio.buffer || !audio.wantOn) return;
-    var c = audio.ctx, t = c.currentTime + 0.02, dur = audio.buffer.duration;
-    var src = c.createBufferSource();
-    var env = c.createGain();
-    src.buffer = audio.buffer;
-    src.connect(env);
-    env.connect(audio.gain);
-    // O ficheiro não foi feito para repetir: entra e sai em fade
-    env.gain.setValueAtTime(0, t);
-    env.gain.linearRampToValueAtTime(1, t + FADE);
-    env.gain.setValueAtTime(1, t + dur - FADE);
-    env.gain.linearRampToValueAtTime(0, t + dur);
-    src.onended = function () { if (audio.src === src) playLoop(); };
-    src.start(t);
-    audio.src = src;
-    audio.playing = true;
+  function checkStarted() {
+    window.setTimeout(function () {
+      if (music.wantOn && !music.playing && !music.failed) soundHint.hidden = false;
+    }, 2800);
   }
+  function tryPlay() {
+    if (!music.ready) return;
+    music.player.unMute();
+    music.player.setVolume(70);
+    music.player.playVideo();
+    checkStarted();
+  }
+  function musicUnavailable() {
+    music.failed = true;
+    music.wantOn = false;
+    soundBtn.hidden = true;
+    soundHint.hidden = true;
+  }
+  window.onYouTubeIframeAPIReady = function () {
+    music.player = new YT.Player('yt-player', {
+      videoId: MUSIC_ID,
+      width: '100%',
+      height: '100%',
+      playerVars: { playsinline: 1, start: MUSIC_START, rel: 0, modestbranding: 1 },
+      events: {
+        onReady: function () {
+          music.ready = true;
+          if (music.wantOn) tryPlay();
+        },
+        onStateChange: function (e) {
+          music.playing = e.data === YT.PlayerState.PLAYING;
+          // No fim volta ao ponto escolhido, não ao início do vídeo
+          if (e.data === YT.PlayerState.ENDED && music.wantOn) {
+            music.player.seekTo(MUSIC_START, true);
+            music.player.playVideo();
+          }
+          showSoundState();
+        },
+        onError: function (e) {
+          // 101 e 150: o dono do vídeo não permite que toque noutros sites
+          if (e.data === 101 || e.data === 150 || e.data === 100) musicUnavailable();
+        }
+      }
+    });
+  };
+  (function () {
+    var tag = doc.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.onerror = musicUnavailable;
+    doc.head.appendChild(tag);
+  })();
   function startMusic() {
-    // Tem de nascer dentro do toque: é a regra dos browsers móveis
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC || !audio.data) return;
-    audio.ctx = new AC();
-    audio.gain = audio.ctx.createGain();
-    audio.gain.gain.value = LEVEL;
-    audio.gain.connect(audio.ctx.destination);
-    audio.ctx.resume();
-    audio.data.then(function (bytes) {
-      if (!bytes) return null;
-      return new Promise(function (ok, fail) { audio.ctx.decodeAudioData(bytes, ok, fail); });
-    }).then(function (buffer) {
-      if (!buffer) return;
-      audio.buffer = buffer;
-      soundBtn.hidden = false;
-      playLoop();
-    }).catch(function () {});
+    music.wantOn = true;
+    soundBtn.hidden = false;
+    showSoundState();
+    tryPlay();
   }
-  function setSound(on) {
-    audio.wantOn = on;
-    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    soundBtn.setAttribute('aria-label', on ? 'Desligar a música' : 'Ligar a música');
-    if (!audio.ctx) return;
-    var t = audio.ctx.currentTime;
-    audio.gain.gain.cancelScheduledValues(t);
-    audio.gain.gain.setValueAtTime(audio.gain.gain.value, t);
-    audio.gain.gain.linearRampToValueAtTime(on ? LEVEL : 0, t + 0.35);
-    if (on) {
-      audio.ctx.resume();
-      if (!audio.playing) playLoop();
-    } else {
-      setTimeout(function () { if (!audio.wantOn) audio.ctx.suspend(); }, 420);
+  soundBtn.addEventListener('click', function () {
+    if (music.playing) {
+      music.wantOn = false;
+      music.player.pauseVideo();
+      return;
     }
-  }
-  soundBtn.addEventListener('click', function () { setSound(!audio.wantOn); });
+    music.wantOn = true;
+    tryPlay();
+  });
+  soundHint.addEventListener('click', function () {
+    soundHint.hidden = true;
+    music.wantOn = true;
+    tryPlay();
+  });
   doc.addEventListener('visibilitychange', function () {
-    if (!audio.ctx) return;
-    if (doc.hidden) { audio.ctx.suspend(); syncFilm(); }
-    else { if (audio.wantOn) audio.ctx.resume(); syncFilm(); }
+    syncFilm();
+    if (!music.ready) return;
+    if (doc.hidden) { if (music.playing) music.player.pauseVideo(); }
+    else if (music.wantOn) tryPlay();
   });
 
   /* Abrir o envelope ------------------------------------------------------ */

@@ -432,6 +432,10 @@ main {
 .end .statement > .script { font-size: clamp(44px, 12.8vw, 58px); }
 .end__date { display: block; margin-top: 8px; font-family: var(--sans); font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--ink); }
 
+/* Música: o leitor continua ativo, mas não se vê. Com display:none os browsers não o tocam */
+.yt-audio { position: fixed; left: 0; bottom: 0; width: 200px; height: 200px; opacity: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+.yt-audio iframe, .yt-audio > div { width: 100%; height: 100%; border: 0; }
+
 /* Local -------------------------------------------------------------------- */
 
 .place__name { margin-top: 10px; font-weight: 300; font-size: clamp(56px, 16.6vw, 72px); line-height: 1; }
@@ -607,6 +611,20 @@ main {
 .sound i:nth-child(3) { animation-delay: -.8s !important; }
 .sound i:nth-child(4) { animation-delay: -.2s !important; }
 @keyframes bars { from { transform: scaleY(.3); } to { transform: scaleY(1); } }
+
+.sound-hint {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 18px);
+  right: max(66px, calc((100vw - var(--w)) / 2 + 66px));
+  z-index: 20;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--sans); font-size: 11.5px; letter-spacing: .06em; text-decoration: none;
+  color: var(--ink);
+  background: rgba(255,255,255,.92);
+  box-shadow: inset 0 0 0 1px var(--gold-line), 0 6px 18px rgba(60,48,30,.12);
+}
+.sound-hint[hidden] { display: none; }
 
 .dock {
   position: fixed;
