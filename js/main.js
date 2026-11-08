@@ -278,7 +278,7 @@
      se o telemóvel não deixar, aparece um aviso para tocar e ouvir. */
 
   var MUSIC_ID = 'vA83MufOCoA';
-  var MUSIC_START = 0; // segundo do vídeo em que a música começa
+  var MUSIC_START = 18; // segundo do vídeo em que a música começa
   var music = { player: null, ready: false, wantOn: false, playing: false, failed: false };
   var soundBtn = $('#sound');
   var soundHint = $('#sound-hint');
