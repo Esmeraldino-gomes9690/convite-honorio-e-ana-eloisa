@@ -359,12 +359,14 @@
     music.wantOn = true;
     tryPlay();
   });
-  doc.addEventListener('visibilitychange', function () {
-    syncFilm();
-    if (!music.ready) return;
-    if (doc.hidden) { if (music.playing) music.player.pauseVideo(); }
-    else if (music.wantOn) tryPlay();
-  });
+  // A música só para se a pessoa carregar no botão. Se parar por outro motivo, retoma.
+  function keepMusicGoing() {
+    if (!music.ready || !music.wantOn || music.failed || doc.hidden) return;
+    var state = music.player.getPlayerState();
+    if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.BUFFERING) music.player.playVideo();
+  }
+  doc.addEventListener('visibilitychange', keepMusicGoing);
+  window.setInterval(keepMusicGoing, 2500);
 
   /* Abrir o envelope ------------------------------------------------------ */
 
@@ -619,54 +621,46 @@
     });
   });
 
-  /* Vídeos em molduras: tocam sozinhos quando aparecem e param quando saem.
-     Se o telemóvel não deixar tocar sozinho (poupança de bateria), aparece o botão. */
+  /* Vídeos em molduras: carregam logo à entrada e tocam sempre, mesmo fora do ecrã.
+     Se o browser os parar, voltam a tocar. O botão só aparece se o telemóvel
+     recusar a reprodução automática (poupança de bateria, por exemplo). */
   (function () {
     var clips = $$('.clip').map(function (box) {
-      return { box: box, video: $('video', box), button: $('.clip__play', box), visible: false, blocked: false };
+      return { box: box, video: $('video', box), button: $('.clip__play', box) };
     });
-    function load(c) {
-      if (c.video.getAttribute('src')) return;
-      c.video.src = c.video.getAttribute('data-src');
-      c.video.load();
-    }
     function play(c) {
-      load(c);
+      if (!c.video.getAttribute('src')) {
+        c.video.src = c.video.getAttribute('data-src');
+        c.video.load();
+      }
+      if (!c.video.paused && !c.video.ended) return;
       var playing = c.video.play();
       if (playing && playing.then) {
-        playing.then(function () { c.blocked = false; c.button.hidden = true; })
-          .catch(function () { c.blocked = true; c.button.hidden = false; });
+        playing.then(function () { c.button.hidden = true; })
+          .catch(function () { if (!doc.hidden) c.button.hidden = false; });
       }
     }
-    function sync() {
-      clips.forEach(function (c) {
-        if (c.visible && !doc.hidden && !saveData && !reduced) play(c);
-        else c.video.pause();
-      });
+    function playAll() {
+      if (reduced) return;
+      clips.forEach(play);
     }
     clips.forEach(function (c) {
-      c.button.addEventListener('click', function () { c.visible = true; load(c); c.video.play().then(function () { c.button.hidden = true; }).catch(function () {}); });
+      c.button.addEventListener('click', function () {
+        c.video.play().then(function () { c.button.hidden = true; }).catch(function () {});
+      });
       c.video.addEventListener('playing', function () { c.button.hidden = true; });
-      c.video.addEventListener('error', function () { c.button.hidden = false; });
-      // Com poupança de dados ou movimento reduzido, o vídeo só toca se a pessoa pedir
-      if (saveData || reduced) c.button.hidden = false;
+      c.video.addEventListener('pause', function () { if (!reduced && !doc.hidden) play(c); });
+      c.video.addEventListener('stalled', function () { if (!reduced) play(c); });
+      if (reduced) {
+        c.video.src = c.video.getAttribute('data-src');
+        c.button.hidden = false;
+      }
     });
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          var c = clips.filter(function (x) { return x.box === entry.target; })[0];
-          c.visible = entry.isIntersecting;
-          // Carrega um pouco antes de aparecer, para não começar em branco
-          if (entry.isIntersecting || entry.intersectionRatio > 0) load(c);
-        });
-        sync();
-      }, { rootMargin: '25% 0px 25% 0px', threshold: [0, 0.2] });
-      clips.forEach(function (c) { io.observe(c.box); });
-    } else {
-      clips.forEach(function (c) { c.visible = true; });
-      sync();
-    }
-    doc.addEventListener('visibilitychange', sync);
+    playAll();
+    // Um toque no ecrã também desbloqueia os vídeos nos telemóveis mais restritivos
+    doc.addEventListener('pointerdown', playAll, { passive: true });
+    doc.addEventListener('visibilitychange', function () { if (!doc.hidden) playAll(); });
+    window.setInterval(function () { if (!doc.hidden) playAll(); }, 2500);
   })();
 
   // Fotos iniciais das cenas e primeira medição
